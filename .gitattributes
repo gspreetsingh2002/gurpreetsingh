@@ -1,2 +1,305 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+#include<string.h>
+#include<process.h>
+#include<iostream.h>
+#include<conio.h>
+#include<fstream.h>
+#include<stdio.h>
+#include<dos.h>
+class hotel
+{ int room_no,d,d2;
+    char name[300],m[100],m2[100];
+    char address[50];
+    long phone,ci,co,am,y,y2;
+    long t;
+    char typro[300];
+    int gu;
+    int nd;
+   public:
+    void input()
+    {cout<<"\n Enter Customer Detalis";
+    cout<<"\n **********************"<<endl;
+    cout<<" Name: ";
+      gets(name);
+	cout<<" Address: ";
+	gets(address);
+	cout<<" Phone No: ";
+	cin>>phone;
+	cout<<"	No.ofdays:";
+	cin>>nd;
+	cout<<"No.ofguests:";
+	cin>>gu;
+	  cout<<"\n CHECK IN:";
+	    cout<<"\n Enter month:";
+	    gets(m);
+	    cout<<"\n Enter day:";
+	    cin>>d;
+	    cout<<"\n Enter year:";
+	    cin>>y;
+	    cout<<"\n CHECK OUT:";
+	    cout<<"\n Enter month:";
+	    gets(m2);
+	    cout<<"\n Enter day:";
+	    cin>>d2;
+	    cout<<"\n Enter year:";
+	    cin>>y2;
+       cout<<"Type of room from the following:"<<endl;
+       sleep(1);
+       cout<<"dbs-double bed suite:"<<endl;
+       cout<<"ss-single bed suite:"<<endl;
+       cout<<"dr-dormitory rooms:"<<endl;
+       gets(typro);
+ cout<<"\tYOUR ROOM NUMBER IS "<<room_no<<endl;
+	}
+    void output()
+    {   cout<<"\n Customer Details";
+	    cout<<"\n ****************";
+	    cout<<"\n Name: "<<name;
+	    cout<<"\n Address: "<<address;
+	    cout<<"\n Phone no: "<<phone;
+	    cout<<"\n No. of days:"<<nd;
+	    cout<<"\n No. of guests:"<<gu;
+	    cout<<"\n Type of room:";
+	    puts(typro);
+	    cout<<"\n CHECK IN:";
+	    cout<<d<<"/";puts(m);cout<<"/";cout<<y;
+	    cout<<"\n CHECK OUT:";
+	    cout<<d2<<"/";puts(m2);cout<<"/";cout<<y2;}
+void roomb()
+{cout<<"Enter the type of ROOM"<<endl;
+ sleep(1);
+ cout<<"(dbs-double bed suite:"<<endl;
+ cout<<"ss-single bed suite:"<<endl;
+ cout<<"dr-dormitory rooms:)"<<endl;
+gets(typro);
+cout<<"Enter your duration of stay[in days]:";
+cin>>nd;
+cout<<"\n\n\t\t LOADING.......ROOM BILL";
+sleep(3);
+clrscr();
+cout<<"\n ROOM BILL";
+cout<<"\n ************";
+if(strcmp(typro,"dbs")==0)
+{am=15000;}
+	 else if(strcmp(typro,"ss")==0)
+	 {am=12000;}
+	 else if (strcmp(typro,"dr")==0)
+	 {am=7500;}
+	 t=am*0.12;
+	 cout<<"\n PRICE OF ROOM(includes breakfast):"<<am;
+	 cout<<"\n TAXES[12 % vat]:"<<t;
+	 cout<<"\n YOUR DURATION OF STAY IS "<<nd<<"days";
+	 cout<<"\n TOTAL PAYABLE AMOUNT:"<<(am+t)*nd<<"   ";}
+hotel()
+{room_no=1;
+t=0;
+am=0;
+y=0;
+y2=0;
+d=0;
+d2=0;
+nd=0;}
+char* returname()
+{return name;}
+int returnroom()
+{return room_no;}
+void getid()
+   {
+    fstream a;
+    a.open("Record.DAT",ios::in|ios::binary) ;
+    int c=1;
+    hotel h;
+    while(!a.eof())
+    {
+     a.read((char*)&h,sizeof(hotel));
+     if(a.eof())
+     break;
+     c++;
+    }
+     room_no=c;
+  }
+
+};
+void add()
+{
+ofstream fout;
+fout.open("Record.dat",ios::app|ios::binary);
+hotel h;
+h.input();
+fout.write((char*)&h,sizeof(hotel));
+cout<<"\n Room is booked!!!";
+fout.close();
+}
+void display()
+{fstream xyz;
+   xyz.open("Record.DAT",ios::in|ios::binary);
+ if(!xyz)
+   {
+     cout<<"\n FILE NOT FOUND";
+     getch();
+     exit(0);
+    }
+
+    hotel h;
+    while(!xyz.eof())
+    {
+     xyz.read((char*)&h,sizeof(hotel));
+     if(xyz.eof())
+     break;
+     h.output();
+     cout<<endl;
+    }
+  xyz.close();
+ }
+void search()
+{
+    ifstream fin;
+    fin.open("Record.dat",ios::in|ios::binary);
+    if(!fin)
+    {cout<<"file not present";
+    exit(0);}
+    char r[100];
+    int f=0;
+    cout<<"\n Enter guest name: ";
+    gets(r);
+    hotel h;
+    while(!fin.eof())
+    {fin.read((char*)&h,sizeof(hotel));
+    if(fin.eof())
+    break;
+	if(strcmp(h.returname(),r)==0)
+	{h.output();
+	    f=1;}}
+if(f==0)
+{cout<<"\n Sorry Room no. not found or vacant!!";}
+    fin.close();
+}
+void exito()
+{clrscr();
+gotoxy(26,10);
+cout<<" THANK U FOR USING OUR SERVICE ";
+getch();
+gotoxy(32,12);
+cout<<" HAVE A NICE DAY " ;
+getch();
+exit(0);
+}
+void checko()
+{ifstream abc;
+abc.open("Record.dat",ios::in|ios::binary);
+hotel h;
+h.roomb();
+abc.read((char*)&h,sizeof(hotel));
+abc.close();
+}
+
+void modify()
+{
+long pos;
+int flag=0;
+fstream file;
+file.open("Record.dat",ios::in|ios::app|ios::binary);
+hotel h;
+char rn[100];
+cout<<"Enter the booking's name to be modified"<<endl;
+gets(rn);
+while(!file.eof())
+{
+pos=file.tellg();
+file.read((char*)&h,sizeof(hotel));
+if(strcmp(h.returname(),rn)==0)
+{
+cout<<"\n Enter New Details";
+cout<<"\n *****************";
+h.input();
+file.seekg(pos);
+file.write((char*)&h,sizeof(hotel));
+cout<<"\n Record is modified!!";
+flag=1;
+break;}}
+if(flag==0)
+cout<<"\n Sorry Room no. not found or vacant!!";
+file.close();
+}
+void dele()
+{int flag=0;
+char r[100];
+ifstream fin("Record.dat",ios::in|ios::binary);
+ofstream fout("temp.dat",ios::app|ios::binary);
+if(!fin)
+{cout<<"file not present ";
+exit(0);}
+cout<<"enter the booking's name to be deleted "<<endl;
+gets(r);
+hotel h;
+while(!fin.eof())
+{fin.read((char*)&h,sizeof(hotel));
+if(strcmp(h.returname(),r)!=0)
+{fout.write((char*)&h,sizeof(hotel));
+flag=1;}               }
+if(flag==0)
+{cout<<"\n Sorry room no. not found or vacant!!"; }
+else
+{cout<<"ROOM SUCCESSFULLY DELETED"<<endl;}
+remove("Record.dat");
+rename("temp.dat","Record.dat");
+fin.close();
+fout.close();
+}
+void main()
+{ clrscr();
+cout<<"\n\n\t\t\t****************************";
+cout<<"\n\n\t\t\tWELCOME TO E-ERDIAN HOTEL";
+    cout<<"\n\n\t\t\t****************************";
+    sleep(2);
+	gotoxy(58,3);
+	cout<<"Windsor Place";
+	gotoxy(58,4);
+	cout<<"Cannaught Place";
+	gotoxy(58,5);
+	cout<<"New Delhi 110001,India";
+	gotoxy(58,6);
+	cout<<"T:(+9111) 4119 1919";
+	sleep(2);
+	cout<<"\n\n\n\n\t\tHosted By:";
+	 sleep(2);
+	 cout<<" GURPREET SINGH AND PULKIT GUPTA"<<endl;
+    sleep(2);
+       char ch;
+       do
+	{
+	cout<<"\n\t\t\t\t*************";
+	cout<<"\n\t\t\t\t* MAIN MENU *";
+	cout<<"\n\t\t\t\t*************";
+	cout<<"\n\t\t\t\t1.BOOK A ROOM";
+	cout<<"\n\t\t\t\t2.DISPLAY BOOKINGS";
+	cout<<"\n\t\t\t\t3.CUSTOMER DETAILS";
+	cout<<"\n\t\t\t\t4.MODIFY YOUR BOOKING";
+	cout<<"\n\t\t\t\t5.CANCEL YOUR BOOKING";
+	cout<<"\n\t\t\t\t6.CHECK OUT";
+	cout<<"\n\t\t\t\t7.EXIT";
+	cout<<"\n\t\t\t\tEnter Your Choice: ";
+	cin>>ch;
+	if(ch=='1')
+	{add();}
+       else if(ch=='2')
+       {display();}
+       else if(ch=='3')
+       {search();}
+       else if(ch=='4')
+       {modify();
+       }
+       else if(ch=='5')
+       {dele();
+       }
+       else if(ch=='6')
+       {checko();
+       }
+       else if(ch=='7')
+       {exito();
+       }
+	cout<<"DO YOU WANT TO CONTINUE(y/n) "<<endl;
+	cin>>ch;}while(ch=='Y'||ch=='y');
+	getch();
+}
